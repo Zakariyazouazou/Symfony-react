@@ -37,8 +37,11 @@ export default function LoginPage() {
         try {
             // 2. Send POST to your Symfony login_check
             const response = await axios.post(
-                'https://symfony-app.zakariyazouazou.com/api/login_check',
-                { username: data.email, password: data.password },
+                'http://127.0.0.1:8000/api/login_check',
+                {
+                    "username": "zakariyazouazou@gmail.com",
+                    "password": "Zouazou2001@"
+                },
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,           // crucial for cookies
