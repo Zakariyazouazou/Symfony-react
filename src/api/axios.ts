@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://symfony-app.zakariyazouazou.com', // e.g. "https://api.myshop.com"
+    baseURL: 'https://symfony-app.zakariyazouazou.com', // e.g. "https://api.myshop.com"
     withCredentials: true,                     // send & receive HttpOnly cookies
     headers: {
         'Content-Type': 'application/json',
