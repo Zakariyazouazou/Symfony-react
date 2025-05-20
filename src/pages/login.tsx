@@ -33,7 +33,7 @@ export default function LoginPage() {
 
 
     // 1. Define onSubmit
-    const onSubmit = async (data: FormValues) => {
+    const onSubmit = async () => {
         try {
             // 2. Send POST to your Symfony login_check
             const response = await axios.post(
