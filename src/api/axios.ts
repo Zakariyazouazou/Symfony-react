@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://symfony-app.zakariyazouazou.com', // e.g. "https://api.myshop.com"
+    baseURL: 'http://localhost:8000', // e.g. http://localhost:8000
     withCredentials: true,                     // send & receive HttpOnly cookies
     headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,12 @@ api.interceptors.response.use(
             config._retry = true;
             isRefreshing = true;
             try {
-                const { data } = await api.post('/auth/refresh');
+                const { data } = await axios.post(
+                    'http://localhost:8000/api/token/refresh',
+                    {},
+                    { withCredentials: true }
+                );
+                // console.log("this is messag for the main axios", data);
                 const newToken = data.accessToken;
                 // notify queued requests
                 refreshQueue.forEach(cb => cb(newToken));
@@ -38,9 +43,8 @@ api.interceptors.response.use(
                 config.headers!['Authorization'] = `Bearer ${newToken}`;
                 return api(config);
             } catch (_refreshErr) {
-                // refresh failed: force logout
-                window.location.href = '/login';
-                return Promise.reject(_refreshErr);
+                console.error("you dont have the permession to get acces for the rest of the data", err);
+                // return Promise.reject(_refreshErr);
             } finally {
                 isRefreshing = false;
             }

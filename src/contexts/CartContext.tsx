@@ -10,6 +10,9 @@ interface CartContextType {
   clearCart: () => void;
   orders: Order[];
   placeOrder: () => void;
+  UpdateCartQuantity: (qty: number) => void , 
+  CartQunatity: number , 
+  setCartQunatity: (qty: number) => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -17,6 +20,11 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [CartQunatity, setCartQunatity] = useState(0)
+
+  const UpdateCartQuantity = (qty: number) => {
+    setCartQunatity(qty)
+  };
 
   const addItem = (item: CartItem) => {
     setCartItems((prev) => [...prev, item]);
@@ -37,7 +45,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addItem, removeItem, clearCart, orders, placeOrder }}
+      value={{
+        cartItems, addItem, removeItem, clearCart, orders, placeOrder,
+        UpdateCartQuantity , CartQunatity , setCartQunatity
+      }}
     >
       {children}
     </CartContext.Provider>

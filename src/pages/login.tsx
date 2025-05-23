@@ -1,89 +1,93 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-// import { useNavigate } from 'react-router-dom';
-// import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import axios from 'axios';
+import { useState } from 'react';
+import { cn } from '@/lib/utils'; // Optional, if you're using a utility to combine class names
+import { Link } from 'react-router-dom';
 
 type FormValues = { email: string; password: string };
 
 export default function LoginPage() {
-    // const { login } = useAuth();
-    // const navigate = useNavigate();
-    const { register, handleSubmit, formState, setError } = useForm<FormValues>({
-        defaultValues: {
-            email: 'helloTestUser@gmail.com',
-            password: 'Zouazou2ddd001@',
-        },
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const [authError, setAuthError] = useState('');
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<FormValues>({
+        // defaultValues: {
+        //     email: 'helloTestUser@gmail.com',
+        //     password: 'Zouazou2ddd001@',
+        // },
     });
 
-    // const onSubmit = async (vals: FormValues) => {
-    //     try {
-    //         await login(vals.email, vals.password);
-    //         navigate('/');
-    //     } catch (err) {
-    //         alert('Login failed');
-    //     }
-    // };
-
-
-
-    // 1. Define onSubmit
-    const onSubmit = async () => {
+    const onSubmit = async (vals: FormValues) => {
+        setAuthError('');
         try {
-            // 2. Send POST to your Symfony login_check
-            const response = await axios.post(
-                'http://127.0.0.1:8000/api/login_check',
-                {
-                    "username": "zakariyazouazou@gmail.com",
-                    "password": "Zouazou2001@"
-                },
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true,           // crucial for cookies
-                }
-            );
-
-            console.log(response.data);
-            // login(data.email, data.password);
-
-            // 3. Store JWT
-            // localStorage.setItem('jwt', response.data.token);
-
-            // 4. Redirect on success
-            // navigate('/dashboard');
-        } catch (err: any) {
-            console.log("error detected herer ", err);
-            // 5. Map server error to form error
-            const msg =
-                err.response?.data?.message ||
-                'Login failed – please check your credentials.';
-            setError('password', { type: 'server', message: msg });
+            await login(vals.email, vals.password);
+            window.location.href = '/';
+        } catch (err) {
+            setAuthError('Email or password is incorrect.');
         }
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
             <Card className="w-full max-w-md">
-                <CardContent>
-                    <h2 className="text-2xl mb-4">Login</h2>
+                <CardContent className="p-6">
+                    <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
+
+                    {authError && (
+                        <div className="mb-4 text-red-600 text-sm text-center">
+                            {authError}
+                        </div>
+                    )}
+
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" {...register('email', { required: true })} />
+                            <Input
+                                id="email"
+                                type="email"
+                                {...register('email', { required: 'Email is required' })}
+                                className={cn(errors.email && 'border-red-500')}
+                            />
+                            {errors.email && (
+                                <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                            )}
                         </div>
+
                         <div>
                             <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" {...register('password', { required: true })} />
+                            <Input
+                                id="password"
+                                type="password"
+                                {...register('password', { required: 'Password is required' })}
+                                className={cn(errors.password && 'border-red-500')}
+                            />
+                            {errors.password && (
+                                <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+                            )}
                         </div>
-                        <Button type="submit" disabled={formState.isSubmitting}>
-                            {formState.isSubmitting ? 'Logging in…' : 'Login'}
+
+                        <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting ? 'Logging in…' : 'Login'}
                         </Button>
                     </form>
+
+                    <p className="text-sm text-center mt-4">
+                        Don't have an account?{' '}
+                        <Link to="/register" className="text-blue-600 hover:underline">
+                            Register here
+                        </Link>
+                    </p>
                 </CardContent>
             </Card>
         </div>

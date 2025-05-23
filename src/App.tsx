@@ -25,6 +25,7 @@ import LoginPage from './pages/login';
 import RegisterPage from './pages/register';
 import { Header } from './components/Header';
 import { ProductList } from './pages/public/ProductList';
+import LoadingState from './components/Loading';
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated } = useAuth();
@@ -44,6 +45,8 @@ export default function App() {
       <CartProvider>
         <BrowserRouter>
           <Header />
+          {/* Loding state  */}
+          <LoadingState/>
           <Routes>
             {/* Public */}
             <Route path="/" element={<ProductList />} />
