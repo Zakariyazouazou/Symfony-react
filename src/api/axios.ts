@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 // local host
-const Thehost = 'http://localhost:8000' // e.g. http://localhost:8000
+const Thehost = 'https://symfony-app.zakariyazouazou.com' // e.g. http://localhost:8000  //https://symfony-app.zakariyazouazou.com/
 
 const api = axios.create({
     baseURL: Thehost, 
