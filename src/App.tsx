@@ -16,7 +16,7 @@ import TrackOrdersPage from './pages/private/TrackOrdersPage';
 
 // Admin pages
 import AddProduct from './pages/admin/AddProduct';
-import DeleteProduct from './pages/admin/DeleteProduct';
+import ProductListe from './pages/admin/ProductListe';
 import UsersList from './pages/admin/UsersList';
 import OrdersList from './pages/admin/OrdersList';
 import CategoriesAdmin from './pages/admin/CategoriesAdmin';
@@ -26,18 +26,29 @@ import RegisterPage from './pages/register';
 import { Header } from './components/Header';
 import { ProductList } from './pages/public/ProductList';
 import LoadingState from './components/Loading';
+import Dashbord from './pages/admin/Dashbord';
+import UpdateProduct from './pages/admin/UpdateProduct';
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, RefrachisLoading } = useAuth();
+
+  if (RefrachisLoading) {
+    return null; // or return null, spinner, etc.
+  }
+
   return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
 const RequireAdmin = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, role } = useAuth();
-  return isAuthenticated && role === 'admin'
-    ? children
-    : <Navigate to="/" replace />;
+  const { isAuthenticated, role, RefrachisLoading } = useAuth();
+
+  if (RefrachisLoading) {
+    return null; // or return null, spinner, etc.
+  }
+
+  return isAuthenticated && role === 'admin' ? children : <Navigate to="/" replace />;
 };
+
 
 export default function App() {
   return (
@@ -46,7 +57,7 @@ export default function App() {
         <BrowserRouter>
           <Header />
           {/* Loding state  */}
-          <LoadingState/>
+          <LoadingState />
           <Routes>
             {/* Public */}
             <Route path="/" element={<ProductList />} />
@@ -84,6 +95,15 @@ export default function App() {
 
             {/* Admin Only */}
             <Route
+              path="/admin"
+              element={
+                <RequireAdmin>
+                  <Dashbord />
+                </RequireAdmin>
+              }
+            />
+
+            <Route
               path="/admin/add-product"
               element={
                 <RequireAdmin>
@@ -91,11 +111,22 @@ export default function App() {
                 </RequireAdmin>
               }
             />
+
             <Route
-              path="/admin/delete-product"
+              path="/admin/updateProduct/:id"
               element={
                 <RequireAdmin>
-                  <DeleteProduct />
+                  <UpdateProduct />
+                </RequireAdmin>
+              }
+            />
+
+
+            <Route
+              path="/admin/product-list"
+              element={
+                <RequireAdmin>
+                  <ProductListe />
                 </RequireAdmin>
               }
             />

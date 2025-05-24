@@ -38,7 +38,7 @@ const Cart = () => {
   const [loading, setLoading] = useState(true)
   const [isUpdating, setIsUpdating] = useState<number | null>(null)
   const [CartId, setCartId] = useState(0)
-
+  const [cartStatus, setCartStatus] = useState("")
   // Checkout state
   const [couponCode, setCouponCode] = useState("")
   const [paymentMethod, setPaymentMethod] = useState("stripe")
@@ -74,9 +74,11 @@ const Cart = () => {
         const { data: OrdersData, status: OrdersStatus } = userOrdersResponse
 
         if (OrdersStatus === 200 && OrdersData[0]?.items) {
+          console.log(OrdersData)
           setCartItems(OrdersData[0].items)
           setTotalAmount(OrdersData[0].total_amount)
           setCartId(OrdersData[0].order_id)
+          setCartStatus(OrdersData[0].status)
           const totalQuantity = OrdersData[0].items.reduce((sum, item) => sum + item.quantity, 0)
           UpdateCartQuantity(totalQuantity)
         }
@@ -200,26 +202,30 @@ const Cart = () => {
 
     setIsProcessingPayment(true)
 
-    try {
-      // Simulate payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000))
 
+
+
+    try {
       if (paymentMethod === "stripe") {
-        showNotification("success", "Payment processed successfully! Order confirmed.")
-        // Clear cart after successful payment
-        setTimeout(() => {
-          setCartItems([])
-          setTotalAmount(0)
-          UpdateCartQuantity(0)
-          navigate("/track-orders")
-        }, 2000)
+        const PaymentRequest = await orderApi.PayementProcess(CartId);
+        const { data, status } = PaymentRequest;
+
+        if (status === 200 && data?.stripeCheckoutLink) {
+          // ✅ Redirect to Stripe Checkout
+          window.location.href = data.stripeCheckoutLink;
+        } else {
+          // ❌ Invalid response, show error
+          showNotification("error", data?.message || "Something went wrong with payment.");
+        }
       } else {
-        showNotification("error", "Only Stripe payments are currently available")
+        showNotification("error", "Only Stripe payments are currently available");
       }
-    } catch (error) {
-      showNotification("error", "Payment failed. Please try again.")
+    } catch (error: any) {
+      // ❌ Network or server error
+      const message = error?.response?.data?.message || "Payment failed. Please try again.";
+      showNotification("error", message);
     } finally {
-      setIsProcessingPayment(false)
+      setIsProcessingPayment(false);
     }
   }
 
@@ -478,7 +484,7 @@ const Cart = () => {
                     <Button
                       className="w-full h-12 text-lg"
                       onClick={processPayment}
-                      disabled={isProcessingPayment || cartItems.length === 0}
+                      disabled={isProcessingPayment || cartItems.length === 0 || cartStatus !== "wait to pay"}
                     >
                       {isProcessingPayment ? (
                         <>
@@ -488,7 +494,7 @@ const Cart = () => {
                       ) : (
                         <>
                           <CreditCard className="h-5 w-5 mr-2" />
-                          Proceed to Checkout
+                          {cartStatus == "wait to pay" ? "Proceed to Checkout" : "Clear cart to continue shopping"}
                         </>
                       )}
                     </Button>

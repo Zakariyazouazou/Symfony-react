@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+
+// local host
+const Thehost = 'http://localhost:8000' // e.g. http://localhost:8000
+
 const api = axios.create({
-    baseURL: 'http://localhost:8000', // e.g. http://localhost:8000
-    withCredentials: true,                     // send & receive HttpOnly cookies
+    baseURL: Thehost, 
+    withCredentials: true,                     
     headers: {
         'Content-Type': 'application/json',
     },
@@ -31,7 +35,7 @@ api.interceptors.response.use(
             isRefreshing = true;
             try {
                 const { data } = await axios.post(
-                    'http://localhost:8000/api/token/refresh',
+                    `${Thehost}/api/token/refresh`,
                     {},
                     { withCredentials: true }
                 );

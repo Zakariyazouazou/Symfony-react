@@ -31,7 +31,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { orderApi } from "@/api/orderApi"
 import { useCart } from "@/contexts/CartContext"
 
-interface Product {
+export interface Product {
     id: number
     name: string
     slug: string
@@ -142,7 +142,6 @@ const ProductDetail = () => {
         }
         try {
             const { status } = await orderApi.create(userId, id, quantity)
-            console.log("this is the user id ", userId)
             console.log("Create status:", status)
             if (status === 201) {
                 // show success popup

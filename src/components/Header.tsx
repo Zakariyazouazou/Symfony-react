@@ -3,7 +3,10 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { ShoppingCart, Menu, SearchIcon, Minus, Plus, ChevronRight, Trash2, AwardIcon } from "lucide-react"
+import {
+    ShoppingCart, Menu, SearchIcon, Minus, Plus, ChevronRight,  
+    Trash2,
+} from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { useCart } from "@/contexts/CartContext"
 import { Button } from "@/components/ui/button"
@@ -20,6 +23,7 @@ import {
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import api from "@/api/axios"
 import { orderApi, type OrderItem } from "@/api/orderApi"
+import { UserButton } from "./UserButton"
 
 interface Category {
     id: number
@@ -33,15 +37,7 @@ interface CategoriesResponse {
     data: Category[]
 }
 
-// Fake cart item interface
-interface CartItem {
-    id: number
-    productId: number
-    name: string
-    price: number
-    quantity: number
-    image: string
-}
+
 
 export const Header: React.FC = () => {
     const { isAuthenticated, role, logout, userId } = useAuth()
@@ -88,7 +84,7 @@ export const Header: React.FC = () => {
         }
     }
 
-    
+
 
     // Remove item from cart
     const removeItem = async (itemId: number) => {
@@ -149,6 +145,9 @@ export const Header: React.FC = () => {
         setCartSheetOpen(false)
         navigate("/cart")
     }
+
+
+
 
     useEffect(() => {
         const ResentTheOderQuantity = async () => {
@@ -250,15 +249,13 @@ export const Header: React.FC = () => {
                     </>
                 ) : (
                     <>
-                        {role === "user" && (
+                        {(role === "user" || role === "admin") && (
                             <Link to="/track-orders">
                                 <Button variant="ghost">Track Orders</Button>
                             </Link>
                         )}
                         {role === "admin" && (
-                            <Link to="/admin/users">
-                                <Button variant="ghost">Admin Panel</Button>
-                            </Link>
+                            <UserButton />
                         )}
                         <Button variant="destructive" onClick={logout}>
                             Logout
@@ -345,7 +342,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Cart Icon with Sheet */}
-            {isAuthenticated && role === "user" && (
+            {isAuthenticated && (role === "user" || role === "admin")&& (
                 <Sheet open={cartSheetOpen} onOpenChange={setCartSheetOpen}>
                     <SheetTrigger asChild>
                         <button

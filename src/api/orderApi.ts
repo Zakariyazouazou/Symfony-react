@@ -65,7 +65,30 @@ export interface UserOrderResponse {
     items: UserOrderItem[];
 }
 
+export interface PayementRequest {
+    "message": string,
+    "stripeCheckoutLink": string;
 
+}
+
+
+export interface OrderListe {
+    "order_id": number,
+    "order_name": string,
+    "status": string,
+    "total_quantity": number,
+    "total_amount": number
+}
+
+export interface ItemsDependOrder {
+    "item_id": number,
+    "product_id": number,
+    "product_name": string,
+    "product_image": string,
+    "unit_price": number,
+    "quantity": number,
+    "total_price": number
+}
 
 
 export const orderApi = {
@@ -120,6 +143,44 @@ export const orderApi = {
         // note: axios will URL-encode the orderId for you
         return api.get<UserOrderResponse[]>(
             `/api/orders/user/${UserId}`,
+        );
+    },
+
+    AllOrder: () => {
+        // note: axios will URL-encode the orderId for you
+        return api.get<OrderListe[]>(
+            `/api/main_order_list`,
+        );
+    },
+
+    GetItemsSingleOrder: (Order_id: number) => {
+        // note: axios will URL-encode the orderId for you
+        return api.get<ItemsDependOrder[]>(
+            `/api/orders/${Order_id}/items_details`,
+        );
+    },
+
+    UpdateStatus: (Order_id: number, status: string) => {
+        // note: axios will URL-encode the orderId for you
+        return api.patch(
+            `/api/orders/${Order_id}/status`,
+            {
+                "status": status,
+            }
+        );
+    },
+
+
+
+    PayementProcess: (Orderid: number,) => {
+        // note: axios will URL-encode the orderId for you
+        return api.post<PayementRequest>(
+            `/api/create-checkout-session`,
+            {
+                "orderId": Orderid,
+                "successUrl": "https://yourdomain.com/payment-success",
+                "cancelUrl": "https://yourdomain.com/payment-cancel"
+            }
         );
     },
 

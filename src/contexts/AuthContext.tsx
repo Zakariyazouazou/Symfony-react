@@ -1,9 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { authApi } from '../api/auth';
 import api from '@/api/axios';
-import { orderApi } from '@/api/orderApi';
-import { useCart } from './CartContext';
-// import axios from 'axios';
 
 
 type Role = 'user' | 'admin' | null;
@@ -79,7 +76,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     setIsAuthenticated(true);
                     setUserName(data.user.username);
                     setUserId(data.user.id);
-                    console.log("this is the user id ", data.user.id);
                     api.defaults.headers.common['Authorization'] = `Bearer ${refreshedToken}`;
                     // console.log("this is the firs refrch ", refreshedToken);
                 })
