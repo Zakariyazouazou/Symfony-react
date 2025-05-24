@@ -86,6 +86,10 @@ export default function LoginPage() {
                             Register here
                         </Link>
                     </p>
+                    <br />
+                    <p className="text-sm text-center mt-4">
+                        to log as admin use email: zakariyazouazou@gmail.com and password: Qwerty123
+                    </p>
                 </CardContent>
             </Card>
         </div>
