@@ -101,9 +101,9 @@ export const Header: React.FC = () => {
     }
 
     // Update item quantity
-    const updateQuantity = async (itemId: number, UpdatedNumber: number, newTotalQuantity: number) => {
+    const updateQuantity = async (itemId: number, UpdatedNumber: number, NewTotalQuantity: number) => {
 
-        if (newTotalQuantity = 0) {
+        if (NewTotalQuantity === 0) {
             alert("we can not update to zero ")
             return
         }

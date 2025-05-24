@@ -1,7 +1,6 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -15,7 +14,6 @@ type FormValues = { email: string; password: string };
 
 export default function LoginPage() {
     const { login } = useAuth();
-    const navigate = useNavigate();
     const [authError, setAuthError] = useState('');
     const {
         register,
