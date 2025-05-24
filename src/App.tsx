@@ -28,6 +28,8 @@ import { ProductList } from './pages/public/ProductList';
 import LoadingState from './components/Loading';
 import Dashbord from './pages/admin/Dashbord';
 import UpdateProduct from './pages/admin/UpdateProduct';
+import SuccesPayement from './pages/public/SuccesPayement';
+import Failedpayment from './pages/public/Failedpayment';
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated, RefrachisLoading } = useAuth();
@@ -66,6 +68,11 @@ export default function App() {
             <Route path="/category/:category" element={<CategoryList />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/payment-success" element={<SuccesPayement />} />
+            <Route path="/payment-cancel" element={<Failedpayment />} />
+
+            
+            {/* SuccesPayement */}
 
             {/* User Only */}
             <Route

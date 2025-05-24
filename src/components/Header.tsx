@@ -1,6 +1,6 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { ShoppingCart, Menu, SearchIcon, Minus, Plus, ChevronRight, Trash2 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { useCart } from "@/contexts/CartContext"
@@ -160,6 +160,14 @@ export const Header: React.FC = () => {
 
     ResentTheOderQuantity()
   }, [userId, CartQunatity])
+
+
+  // top scroll autuamticly
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">

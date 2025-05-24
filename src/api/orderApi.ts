@@ -178,8 +178,8 @@ export const orderApi = {
             `/api/create-checkout-session`,
             {
                 "orderId": Orderid,
-                "successUrl": "https://yourdomain.com/payment-success",
-                "cancelUrl": "https://yourdomain.com/payment-cancel"
+                "successUrl": "https://sym-react.netlify.app/payment-success",
+                "cancelUrl": "https://sym-react.netlify.app/payment-cancel"
             }
         );
     },
