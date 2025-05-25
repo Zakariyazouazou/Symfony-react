@@ -230,7 +230,7 @@ export const Header: React.FC = () => {
                   {categories.map((cat) => (
                     <Link
                       key={cat.id}
-                      to={`/category/${cat.slug}`}
+                      to={`/category/${cat.id}`}
                       onClick={closeSheet}
                       className="px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
                     >
@@ -455,7 +455,7 @@ export const Header: React.FC = () => {
                               categories.map((cat) => (
                                 <Link
                                   key={cat.id}
-                                  to={`/category/${cat.slug}`}
+                                  to={`/category/${cat.id}`}
                                   onClick={closeSheet}
                                   className="block px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                                 >
